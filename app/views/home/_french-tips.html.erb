@@ -1,0 +1,13 @@
+<div class="products wrapper">
+  <section class="products_section col-span-full md:col-span-9 lg:col-span-10">
+    <div class="cat-header flex mb-6 flex-col">
+      <h1 class="products__taxon-title mb-4 font-serif text-h3 lg:text-h2 text-center"><%= @basic_bundle_taxon.name %></h1>
+      <p class="text-red text-center mb-4"><%= @basic_bundle_taxon.description %></p>
+    </div>
+    <%= render 'products/products', products: @french_tip_products, taxon: @basic_bundle_taxon %>
+    <% unless params[:keywords].present? %>
+      <% cache [I18n.locale, @basic_bundle_taxon] do %>
+      <% end %>
+    <% end %>
+  </section>
+</div>
