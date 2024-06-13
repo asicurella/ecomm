@@ -6,6 +6,9 @@ class HomeController < StoreController
     # Fetch specific taxons as needed
     @basic_bundle_taxon = Spree::Taxon.find_by(permalink: 'categories/basic-bundle')
     @caps_taxon = Spree::Taxon.find_by(permalink: 'categories/clothing/caps')
+    @searcher = build_searcher(params.merge(include_images: true))
+    @products = @searcher.retrieve_products
+    @taxonomies = Spree::Taxonomy.includes(root: :children)
 
     if @basic_bundle_taxon
       basic_bundle_searcher = build_searcher(params.merge(include_images: true, taxon: @basic_bundle_taxon.id))
@@ -26,5 +29,15 @@ class HomeController < StoreController
     # Original Spree logic to fetch products
     @searcher = build_searcher(params.merge(include_images: true))
     @products = @searcher.retrieve_products
+  end
+
+    
+
+  private
+
+  def build_searcher(params)
+    Spree::Config.searcher_class.new(params).tap do |searcher|
+      searcher.current_user = try_spree_current_user
+    end
   end
 end
